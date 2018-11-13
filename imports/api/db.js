@@ -21,11 +21,6 @@ Meteor.methods({
     check(varFechaEntrega, Date);
     check(varEstado, String);
 
-    // Make sure the user is logged in before inserting a task
-    /*if (! this.userId) {  
-        throw new Meteor.Error('not-authorized');  
-      } */
-
     coleccionProyectos.insert({
       nombre: varNombre,
       descripcion: varDescripcion,
@@ -47,11 +42,6 @@ Meteor.methods({
     check(varPrioridadTarea, String);
     check(varFechaCreacionTarea, Date);
 
-    // Make sure the user is logged in before inserting a task
-    /*if (! this.userId) {  
-        throw new Meteor.Error('not-authorized');  
-      } */
-
     coleccionProyectos.update(
       { _id: varIdProyecto },
       {
@@ -65,5 +55,21 @@ Meteor.methods({
         }
       }
     );
+  },
+  "clientes.insert"(
+    varNombre,
+    varPassword,
+    varEmail
+  ) {
+    check(varNombre, String);
+    check(varPassword, String);
+    check(varEmail, String);
+
+    coleccionClientes.insert({
+      usuario: varNombre,
+      pwd: varPassword,
+      email: varEmail
+    });
   }
+
 });

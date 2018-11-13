@@ -3,18 +3,19 @@ import ReactDOM from "react-dom";
 import { Redirect } from "react-router-dom";
 import { coleccionClientes } from "../api/db.js";
 
-export default class Login extends Component {
+export default class Registrar extends Component {
   constructor(props) {
     super(props);
   }
 
-  handleIngresar(event) {
+  handleRegistrar(event) {
     event.preventDefault();
 
     const nombreUsuario = ReactDOM.findDOMNode(this.refs.inputUsuario).value;
     const pwdUsuario = ReactDOM.findDOMNode(this.refs.inputPassword).value;
+    const email = ReactDOM.findDOMNode(this.refs.inputEmail).value;
 
-    if (!(nombreUsuario != "" && pwdUsuario != "")) {
+    if (!(nombreUsuario != "" && pwdUsuario != "" && email != "")) {
       document.getElementById("lblMensaje").innerHTML =
         "No se debe dejar campos vacios";
       $("#modalCenter").modal("show");
@@ -24,23 +25,14 @@ export default class Login extends Component {
     let documentoUsuario = coleccionClientes.findOne({
       usuario: nombreUsuario
     });
-
     if (documentoUsuario) {
-        if(documentoUsuario.pwd == pwdUsuario){
-            sessionStorage.setItem("usuario", nombreUsuario);
-
-            window.location.replace("/proyectos");
-        }else{
-            document.getElementById("lblMensaje").innerHTML =
-            "Contraseña incorrecta";
-          $("#modalCenter").modal("show");
-          return;
-        }
-    }else{
-        document.getElementById("lblMensaje").innerHTML =
-        "Usuario no existe";
+      document.getElementById("lblMensaje").innerHTML =
+        "Ya existe un usuario con este nombre";
       $("#modalCenter").modal("show");
-      return;
+    } else {
+      Meteor.call("clientes.insert", nombreUsuario, pwdUsuario, email);
+
+      window.location.replace("/");
     }
   }
 
@@ -72,18 +64,28 @@ export default class Login extends Component {
                       placeholder="Contraseña"
                     />
                   </div>
+                  <div className="form-group">
+                    <label htmlFor="inputEmail">Email</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="inputEmail"
+                      ref="inputEmail"
+                      placeholder="ejemplo@hotmail.com"
+                    />
+                  </div>
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    onClick={this.handleIngresar.bind(this)}
+                    onClick={this.handleRegistrar.bind(this)}
                   >
-                    Ingresar
+                    Registrar
                   </button>
                 </form>
               </li>
               <li className="list-group-item">
-                <a className="dropdown-item" href="/registrar">
-                  ¿Nuevo por aquí? Registrarse
+                <a className="dropdown-item" href="/">
+                  Volver a ingresar
                 </a>
               </li>
             </ul>
@@ -115,6 +117,37 @@ export default class Login extends Component {
                 </div>
                 <div className="modal-body">
                   <label id="lblMensaje">...</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="modal fade"
+            id="modalCenter2"
+            tabIndex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true"
+            data-show="false"
+          >
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalCenterTitle2">
+                    <label id="lblMensajeTitulo2">...</label>
+                  </h5>
+                  <button
+                    type="button"
+                    className="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <label id="lblMensaje2">...</label>
                 </div>
               </div>
             </div>

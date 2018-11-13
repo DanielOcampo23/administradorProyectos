@@ -4,6 +4,7 @@ import Route from "react-router-dom/Route";
 import Switch from "react-router-dom/Switch";
 import Login from "./Login";
 import App from "./App";
+import Registrar from "./Registrar";
 
 class ReactRouter extends Component {
   render() {
@@ -22,6 +23,13 @@ class ReactRouter extends Component {
             exact
             render={() => {
               return <App />;
+            }}
+          />
+          <Route
+            path="/registrar"
+            exact
+            render={() => {
+              return <Registrar />;
             }}
           />
         </Switch>
